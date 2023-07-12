@@ -15,6 +15,10 @@ const LoginForm = () => {
         navigate("/");
     };
     
+    const onFinishFailed = (errorInfo) => {
+        console.log('Failed:', errorInfo);
+    };
+    
     return (
         <Form
             name="normal_login"
@@ -23,13 +27,15 @@ const LoginForm = () => {
                 remember: true,
             }}
             onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            autoComplete="off"
         >
             <Form.Item
                 name="username"
                 rules={[
                     {
                         required: true,
-                        message: 'Please input your Username!',
+                        message: 'Пожалуйста введите ваше имя пользователя!',
                     },
                 ]}
             >
@@ -41,11 +47,11 @@ const LoginForm = () => {
                 rules={[
                     {
                         required: true,
-                        message: 'Please input your Password!',
+                        message: 'Пожалуйста введите ваш пароль!',
                     },
                 ]}
             >
-                <Input
+                <Input.Password
                     prefix={<LockOutlined className="site-form-item-icon" />}
                     type="password"
                     placeholder="Password"
@@ -54,9 +60,9 @@ const LoginForm = () => {
             
             <Form.Item>
                 <Button type="primary" htmlType="submit" className="login-form-button">
-                    Log in
+                    Войти
                 </Button>
-                Or <a href="">register now!</a>
+                {/*Or <a href="">register now!</a>*/}
             </Form.Item>
         </Form>
     );

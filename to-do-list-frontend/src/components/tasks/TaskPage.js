@@ -13,7 +13,12 @@ const TaskPage = () => {
     }, []);
     
     return (
-        <div>
+        <div
+            style={{
+                width: "60%",
+                margin: "auto",
+        }}
+        >
             <TaskCreateModal />
             <Divider />
             <TaskTable />

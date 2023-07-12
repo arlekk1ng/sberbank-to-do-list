@@ -9,6 +9,7 @@ const expandable = {
         <p
             style={{
                 margin: 0,
+                // wordWrap: "break-word",
             }}
         >
             {record.description}
@@ -16,7 +17,7 @@ const expandable = {
     ),
 };
 
-const ChatGPT = () => {
+const TaskTable = () => {
     const tasksData = useSelector(state => state.tasks.data);
     const dispatch = useDispatch();
     
@@ -78,4 +79,4 @@ const ChatGPT = () => {
     );
 };
 
-export default ChatGPT;
+export default TaskTable;

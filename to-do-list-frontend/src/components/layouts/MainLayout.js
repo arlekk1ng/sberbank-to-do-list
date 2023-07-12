@@ -7,7 +7,6 @@ import {useDispatch, useSelector} from "react-redux";
 import authService from "../../services/auth.service";
 import {setLogoutMenu} from "../../slices/sideMenuSlice";
 import TaskPage from "../tasks/TaskPage";
-import ChatGPT from "../tasks/test/ChatGPT";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -56,7 +55,15 @@ const MainLayout = () => {
                     console.log(collapsed, type);
                 }}
             >
-                <div className="demo-logo-vertical" />
+                <div
+                    className="demo-logo-vertical"
+                    style={{
+                        height: "83px",
+                        // fontSize: 49,
+                    }}
+                >
+                    {/*TO DO IT*/}
+                </div>
                 
                 <Menu
                     theme="dark"
@@ -91,7 +98,6 @@ const MainLayout = () => {
                             minHeight: "100%",
                         }}
                     >
-                        {/* Main content */}
                         
                         <Routes>
                             <Route path={"/api/auth/signin"} element={<LoginForm />} />
@@ -107,7 +113,7 @@ const MainLayout = () => {
                         textAlign: 'center',
                     }}
                 >
-                    Ant Design ©2023 Created by Ant UED
+                    TO DO IT ©2023 Created by Arlekk1ng
                 </Footer>
             </Layout>
         </Layout>
