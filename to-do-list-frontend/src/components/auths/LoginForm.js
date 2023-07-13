@@ -12,7 +12,7 @@ const LoginForm = () => {
     const onFinish = async (values) => {
         try {
             await authService.login(values);
-            await categoryService.getCategories(dispatch);
+            categoryService.getCategories(dispatch);
             navigate("/");
         } catch (error) {
             // Обработка ошибок

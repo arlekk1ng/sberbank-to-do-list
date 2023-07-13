@@ -17,17 +17,11 @@ const defaultMenuItems = [
 const userMenuItems = [
     {
         key: "profile",
-        label: initUser ? initUser.username : "DEFAULT",
+        label: "!initialState",
     },
     {
         key: "categories",
         label: "Категории",
-        children: [
-            {
-                key: "addCategory",
-                label: "Добавить",
-            },
-        ],
     },
     {
         key: "logout",
@@ -45,26 +39,17 @@ export const sideMenuSlice = createSlice({
     initialState: initialState,
     reducers: {
         setUserMenu: (state, action) => {
-            if (action.payload.username) {
-                console.log("setUserMenu.if");
-                
-                userMenuItems[0] = {...userMenuItems[0], label: action.payload.username};
-            }
-            
-            console.log("setUserMenu", action.payload.categories);
+            userMenuItems[0] = {...userMenuItems[0], label: action.payload.username};
             
             const children = action.payload.categories.map(category => ({
-                key: `category-${category.id}`,
+                key: category.id,
                 label: category.name,
-            }))
-            children.push({
-                key: "updateCategories",
-                label: "Обновить",
-            });
+            }));
             children.push({
                 key: "addCategory",
                 label: "Добавить",
             });
+            
             userMenuItems[1] = {...userMenuItems[1], children: children};
             
             state.menu = [...userMenuItems];

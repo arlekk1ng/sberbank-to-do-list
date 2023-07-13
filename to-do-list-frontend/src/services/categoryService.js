@@ -3,14 +3,11 @@ import {API_DOMAIN} from "./constants";
 import authHeader from "./authHeader";
 import {setCategories} from "../slices/categoriesSlice";
 
-// const API_URL = `${API_DOMAIN}/categories`;
 const API_URL = "/categories";
 
 const getCategories = (dispatch) => {
     return axios.get(API_URL,  {headers: authHeader()}).then(
         (response) => {
-            console.log("getCategories, response = ", response.data);
-            
             dispatch(setCategories(response.data));
         },
         (error) => {

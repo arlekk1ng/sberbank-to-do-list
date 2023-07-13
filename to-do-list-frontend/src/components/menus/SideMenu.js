@@ -12,7 +12,7 @@ const CategoryCreateForm = ({ open, onCreate, onCancel }) => {
     return (
         <Modal
             open={open}
-            title="Добавить новую задачу"
+            title="Добавить новую категорию"
             okText="Добавить"
             cancelText="Отмена"
             onCancel={onCancel}
@@ -35,7 +35,7 @@ const CategoryCreateForm = ({ open, onCreate, onCancel }) => {
             >
                 <Form.Item
                     name="name"
-                    label="Название категории"
+                    label="Название"
                     rules={[
                         {
                             required: true,
@@ -63,11 +63,16 @@ const SideMenu = () => {
     const menuItems = useSelector(state => state.sideMenu.menu);
     const dispatch = useDispatch();
     const categories = useSelector(state => state.categories.value);
-    const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+    const auth = useSelector(state => state.auth);
     
     useEffect(() => {
-        if (isLoggedIn) {
+        categoryService.getCategories(dispatch);
+    }, [])
+    
+    useEffect(() => {
+        if (auth.isLoggedIn) {
             const payload = {
+                username: auth.user.username,
                 categories: categories,
             };
             dispatch(setUserMenu(payload));
@@ -87,17 +92,8 @@ const SideMenu = () => {
                 dispatch(setDefaultMenu());
                 navigate("/api/auth/sign-in");
                 break;
-            case "updateCategories":
-                categoryService.getCategories(dispatch);
-                break;
             case "addCategory":
                 setOpen(true);
-                
-                
-                // создание категории:
-                // отправить запрос на добавление категории
-                // обновить слайс категорий
-                // обновить слайс меню
                 break;
             default:
                 // клик по категории
