@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.arlekk1ng.todolistbackend.entity.user.role.UserRole;
+import ru.arlekk1ng.todolistbackend.entity.user.role.Role;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -34,11 +34,11 @@ public class User {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "users_user_roles",
+            name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<UserRole> userRoles = new HashSet<>();
+    private Set<Role> roles = new HashSet<>();
 
     public User(String username, String email, String password) {
         this.username = username;

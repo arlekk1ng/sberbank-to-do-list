@@ -1,6 +1,6 @@
 import {LockOutlined, MailOutlined, UserOutlined} from '@ant-design/icons';
 import {Button, Form, Input} from 'antd';
-import authService from "../../services/auth.service";
+import authService from "../../services/authService";
 import {useNavigate} from "react-router-dom";
 
 const RegistrationForm = () => {

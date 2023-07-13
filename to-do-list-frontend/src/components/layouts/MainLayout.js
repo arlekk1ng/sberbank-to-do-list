@@ -1,43 +1,16 @@
-import {Layout, Menu, theme} from 'antd';
+import {Layout, theme} from 'antd';
 import React from 'react';
 import RegistrationForm from "../auths/RegistrationForm";
-import {Route, Routes, useNavigate} from "react-router-dom";
+import {Route, Routes} from "react-router-dom";
 import LoginForm from "../auths/LoginForm";
-import {useDispatch, useSelector} from "react-redux";
-import authService from "../../services/auth.service";
-import {setLogoutMenu} from "../../slices/sideMenuSlice";
-import TaskPage from "../tasks/TaskPage";
+import SideMenu from "../menus/SideMenu";
 
 const { Header, Content, Footer, Sider } = Layout;
 
 const MainLayout = () => {
-    const navigate = useNavigate();
-    
-    const menuItems = useSelector(state => state.sideMenu.menu);
-    const dispatch = useDispatch();
-    
     const {
         token: { colorBgContainer },
     } = theme.useToken();
-    
-    const clickMenuItemHandler = ({key}) => {
-        switch (key) {
-            case "login":
-                navigate("/api/auth/signin");
-                break;
-            case "registration":
-                navigate("/api/auth/signup");
-                break;
-            case "tasks":
-                navigate("/tasks");
-                break;
-            case "logout":
-                authService.logout();
-                dispatch(setLogoutMenu());
-                navigate("/api/auth/signin");
-                break;
-        }
-    };
     
     return (
         <Layout
@@ -65,15 +38,8 @@ const MainLayout = () => {
                     {/*TO DO IT*/}
                 </div>
                 
-                <Menu
-                    theme="dark"
-                    mode="inline"
-                    // defaultSelectedKeys={['2']}
-                    items={menuItems}
-                    
-                    onClick={clickMenuItemHandler}
-                    selectedKeys={[]}
-                />
+                <SideMenu />
+                
             </Sider>
             
             <Layout>
@@ -102,7 +68,7 @@ const MainLayout = () => {
                         <Routes>
                             <Route path={"/api/auth/signin"} element={<LoginForm />} />
                             <Route path={"/api/auth/signup"} element={<RegistrationForm />} />
-                            <Route path={"/tasks"} element={<TaskPage />} />
+                            
                         </Routes>
                         
                     </div>

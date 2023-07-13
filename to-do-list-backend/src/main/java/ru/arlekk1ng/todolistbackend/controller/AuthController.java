@@ -14,10 +14,10 @@ import ru.arlekk1ng.todolistbackend.entity.user.request.LoginRequest;
 import ru.arlekk1ng.todolistbackend.entity.user.request.SignupRequest;
 import ru.arlekk1ng.todolistbackend.entity.user.response.JwtResponse;
 import ru.arlekk1ng.todolistbackend.entity.user.response.MessageResponse;
-import ru.arlekk1ng.todolistbackend.entity.user.role.UserRole;
-import ru.arlekk1ng.todolistbackend.entity.user.role.UserRoleEnum;
+import ru.arlekk1ng.todolistbackend.entity.user.role.Role;
+import ru.arlekk1ng.todolistbackend.entity.user.role.RoleEnum;
 import ru.arlekk1ng.todolistbackend.repository.UserRepository;
-import ru.arlekk1ng.todolistbackend.repository.UserRoleRepository;
+import ru.arlekk1ng.todolistbackend.repository.RoleRepository;
 import ru.arlekk1ng.todolistbackend.security.jwt.JwtUtils;
 import ru.arlekk1ng.todolistbackend.security.service.UserDetailsImpl;
 
@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
-    private final UserRoleRepository userRoleRepository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder encoder;
     private final JwtUtils jwtUtils;
 
@@ -39,13 +39,13 @@ public class AuthController {
     public AuthController(
             AuthenticationManager authenticationManager,
             UserRepository userRepository,
-            UserRoleRepository userRoleRepository,
+            RoleRepository roleRepository,
             PasswordEncoder encoder,
             JwtUtils jwtUtils
     ) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
-        this.userRoleRepository = userRoleRepository;
+        this.roleRepository = roleRepository;
         this.encoder = encoder;
         this.jwtUtils = jwtUtils;
     }
@@ -91,30 +91,30 @@ public class AuthController {
         );
 
         Set<String> strUserRoles = signUpRequest.getUserRoles();
-        Set<UserRole> userRoles = new HashSet<>();
+        Set<Role> roles = new HashSet<>();
 
         if (strUserRoles == null) {
-            UserRole userRole = userRoleRepository.findByName(UserRoleEnum.ROLE_USER)
+            Role role = roleRepository.findByName(RoleEnum.ROLE_USER)
                     .orElseThrow(() -> new RuntimeException("Роль не найдена"));
-            userRoles.add(userRole);
+            roles.add(role);
         } else {
             strUserRoles.forEach(role -> {
                 switch (role) {
                     case "admin":
-                        UserRole adminRole = userRoleRepository.findByName(UserRoleEnum.ROLE_ADMIN)
+                        Role adminRole = roleRepository.findByName(RoleEnum.ROLE_ADMIN)
                                 .orElseThrow(() -> new RuntimeException("Роль не найдена"));
-                        userRoles.add(adminRole);
+                        roles.add(adminRole);
 
                         break;
                     default:
-                        UserRole userRole = userRoleRepository.findByName(UserRoleEnum.ROLE_USER)
+                        Role userRole = roleRepository.findByName(RoleEnum.ROLE_USER)
                                 .orElseThrow(() -> new RuntimeException("Роль не найдена"));
-                        userRoles.add(userRole);
+                        roles.add(userRole);
                 }
             });
         }
 
-        user.setUserRoles(userRoles);
+        user.setRoles(roles);
         userRepository.save(user);
 
         return ResponseEntity.ok(new MessageResponse("Пользователь успешно зарегистрирован"));

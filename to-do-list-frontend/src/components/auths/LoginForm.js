@@ -1,17 +1,26 @@
 import {LockOutlined, UserOutlined} from '@ant-design/icons';
 import {Button, Form, Input} from 'antd';
-import authService from "../../services/auth.service";
-import {useDispatch} from "react-redux";
-import {setLoginMenu} from "../../slices/sideMenuSlice";
+import authService from "../../services/authService";
+import {useDispatch, useSelector} from "react-redux";
+import {setUserMenu} from "../../slices/sideMenuSlice";
 import {useNavigate} from "react-router-dom";
+import categoriesService from "../../services/categorieService";
 
 const LoginForm = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const categories = useSelector(state => state.categories.value);
     
     const onFinish = (values) => {
         authService.login(values);
-        dispatch(setLoginMenu(values.username));
+        
+        categoriesService.getCategories(dispatch);
+        const payload = {
+            username: values.username,
+            categories: categories,
+        };
+        dispatch(setUserMenu(payload));
+        
         navigate("/");
     };
     
