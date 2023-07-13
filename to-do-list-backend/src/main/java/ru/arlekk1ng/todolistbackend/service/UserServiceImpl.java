@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.arlekk1ng.todolistbackend.entity.category.Category;
+import ru.arlekk1ng.todolistbackend.entity.category.CategoryDTO;
 import ru.arlekk1ng.todolistbackend.entity.user.User;
 import ru.arlekk1ng.todolistbackend.repository.UserRepository;
 
@@ -27,13 +28,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Category addCategory(Long userId, Category category) {
+    public boolean addCategory(Long userId, CategoryDTO categoryDTO) {
         User user = getUser(userId);
-        category.setUser(user);
-        user.getCategories().add(category);
+        user.getCategories().add(new Category(categoryDTO.getName()));
         userRepository.save(user);
-        log.info("saved categoryId = {}", category.getId());
-        return category;
+        return true;
     }
 
     private User getUser(Long userId) {

@@ -22,10 +22,8 @@ public class Category {
     @Column
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
-
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "category_id")
     private List<Task> tasks = new ArrayList<>();
 
     public Category(String name) {

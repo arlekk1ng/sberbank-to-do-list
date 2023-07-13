@@ -38,7 +38,4 @@ public class Task {
     @Enumerated(EnumType.STRING)
     @Column
     private TaskRepetitionRateEnum repetitionRate;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Category category;
 }

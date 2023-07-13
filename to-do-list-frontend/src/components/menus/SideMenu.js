@@ -66,7 +66,9 @@ const SideMenu = () => {
     const auth = useSelector(state => state.auth);
     
     useEffect(() => {
-        categoryService.getCategories(dispatch);
+        if (auth.isLoggedIn) {
+            categoryService.getCategories(dispatch);
+        }
     }, [])
     
     useEffect(() => {
@@ -96,7 +98,7 @@ const SideMenu = () => {
                 setOpen(true);
                 break;
             default:
-                // клик по категории
+                // клик по определенной категории
                 // отправить запрос на получение тасков по этой категории
                 // обновить слайс тасков
                 // перенаправить на страницу с тасками

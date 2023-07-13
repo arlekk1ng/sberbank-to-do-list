@@ -1,11 +1,12 @@
 package ru.arlekk1ng.todolistbackend.service;
 
 import ru.arlekk1ng.todolistbackend.entity.category.Category;
+import ru.arlekk1ng.todolistbackend.entity.category.CategoryDTO;
 
 import java.util.List;
 
 public interface UserService {
 
     List<Category> getCategories(Long userId);
-    Category addCategory(Long userId, Category category);
+    boolean addCategory(Long userId, CategoryDTO categoryDTO);
 }

@@ -31,9 +31,7 @@ public class UserController {
     }
 
     @PostMapping("/categories")
-    public CategoryDTO addCategory(@RequestBody CategoryDTO categoryDTO) {
-        Category category = new Category(categoryDTO.getName());
-        Category savedCategory = userService.addCategory(memoryImpl.getUserId(), category);
-        return new CategoryDTO(savedCategory.getId(), savedCategory.getName());
+    public boolean addCategory(@RequestBody CategoryDTO categoryDTO) {
+        return userService.addCategory(memoryImpl.getUserId(), categoryDTO);
     }
 }
