@@ -1,15 +1,19 @@
 package ru.arlekk1ng.todolistbackend.entity.category;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import ru.arlekk1ng.todolistbackend.entity.task.Task;
 import ru.arlekk1ng.todolistbackend.entity.user.User;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "categories")
 @Data
+@NoArgsConstructor
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,8 +22,13 @@ public class Category {
     @Column
     private String name;
 
-    @NotNull
-    @ManyToOne
-    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
+
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Task> tasks = new ArrayList<>();
+
+    public Category(String name) {
+        this.name = name;
+    }
 }

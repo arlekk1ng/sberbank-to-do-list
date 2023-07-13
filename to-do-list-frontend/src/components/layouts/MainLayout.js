@@ -4,6 +4,7 @@ import RegistrationForm from "../auths/RegistrationForm";
 import {Route, Routes} from "react-router-dom";
 import LoginForm from "../auths/LoginForm";
 import SideMenu from "../menus/SideMenu";
+import ChatGPT from "../tests/ChatGPT";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -66,9 +67,10 @@ const MainLayout = () => {
                     >
                         
                         <Routes>
-                            <Route path={"/api/auth/signin"} element={<LoginForm />} />
-                            <Route path={"/api/auth/signup"} element={<RegistrationForm />} />
+                            <Route path={"/api/auth/sign-in"} element={<LoginForm />} />
+                            <Route path={"/api/auth/sign-up"} element={<RegistrationForm />} />
                             
+                            <Route path={"/chat-gpt"} element={<ChatGPT />} />
                         </Routes>
                         
                     </div>

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import TextArea from "antd/es/input/TextArea";
 import taskService from "../../services/taskService";
 import {useDispatch} from "react-redux";
+
 const CollectionCreateForm = ({ open, onCreate, onCancel }) => {
     const [form] = Form.useForm();
     
@@ -55,6 +56,7 @@ const CollectionCreateForm = ({ open, onCreate, onCancel }) => {
         </Modal>
     );
 };
+
 const TaskCreateModal = () => {
     const dispatch = useDispatch();
     const [open, setOpen] = useState(false);

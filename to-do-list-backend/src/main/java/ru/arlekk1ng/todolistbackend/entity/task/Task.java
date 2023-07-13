@@ -39,7 +39,6 @@ public class Task {
     @Column
     private TaskRepetitionRateEnum repetitionRate;
 
-    @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Category category;
 }

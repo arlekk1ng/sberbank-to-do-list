@@ -8,7 +8,7 @@ const RegistrationForm = () => {
     
     const onFinish = (values) => {
         authService.register(values);
-        navigate("/api/auth/signin");
+        navigate("/api/auth/sign-in");
     };
     
     const onFinishFailed = (errorInfo) => {
