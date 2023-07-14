@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import ru.arlekk1ng.todolistbackend.entity.category.CategoryDTO;
 import ru.arlekk1ng.todolistbackend.entity.user.User;
 import ru.arlekk1ng.todolistbackend.entity.user.request.LoginRequest;
 import ru.arlekk1ng.todolistbackend.entity.user.request.SignupRequest;
@@ -20,6 +21,7 @@ import ru.arlekk1ng.todolistbackend.repository.UserRepository;
 import ru.arlekk1ng.todolistbackend.repository.RoleRepository;
 import ru.arlekk1ng.todolistbackend.security.jwt.JwtUtils;
 import ru.arlekk1ng.todolistbackend.security.service.UserDetailsImpl;
+import ru.arlekk1ng.todolistbackend.service.UserService;
 
 import java.util.HashSet;
 import java.util.List;
@@ -34,6 +36,7 @@ public class AuthController {
     private final RoleRepository roleRepository;
     private final PasswordEncoder encoder;
     private final JwtUtils jwtUtils;
+    private final UserService userService;
 
     @Autowired
     public AuthController(
@@ -41,13 +44,15 @@ public class AuthController {
             UserRepository userRepository,
             RoleRepository roleRepository,
             PasswordEncoder encoder,
-            JwtUtils jwtUtils
+            JwtUtils jwtUtils,
+            UserService userService
     ) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.encoder = encoder;
         this.jwtUtils = jwtUtils;
+        this.userService = userService;
     }
 
     @PostMapping("/sign-in")
@@ -115,7 +120,9 @@ public class AuthController {
         }
 
         user.setRoles(roles);
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
+
+        userService.addCategory(savedUser.getId(), new CategoryDTO("Новая категория"));
 
         return ResponseEntity.ok(new MessageResponse("Пользователь успешно зарегистрирован"));
     }

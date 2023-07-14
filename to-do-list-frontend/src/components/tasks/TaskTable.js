@@ -166,6 +166,17 @@ const TaskTable = ({categoryId}) => {
                             
                             return record.state;
                         },
+                        filters: [
+                            {
+                                text: 'Выполненные',
+                                value: 'COMPLETED',
+                            },
+                            {
+                                text: 'Не выполненные',
+                                value: 'NOT_COMPLETED',
+                            },
+                        ],
+                        onFilter: (value, record) => record.state === value,
                     },
                     {
                         title: 'Название',

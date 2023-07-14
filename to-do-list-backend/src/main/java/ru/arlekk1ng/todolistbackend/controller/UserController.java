@@ -1,6 +1,7 @@
 package ru.arlekk1ng.todolistbackend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.arlekk1ng.todolistbackend.entity.category.Category;
 import ru.arlekk1ng.todolistbackend.entity.category.CategoryDTO;
@@ -10,10 +11,14 @@ import ru.arlekk1ng.todolistbackend.entity.task.enumeration.TaskStateEnum;
 import ru.arlekk1ng.todolistbackend.memory.MemoryImpl;
 import ru.arlekk1ng.todolistbackend.service.UserService;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 @RestController
 public class UserController {
+    private int categoriesCount = 0;
+    
     private final UserService userService;
     private final MemoryImpl memoryImpl;
 
@@ -35,8 +40,9 @@ public class UserController {
     }
 
     @DeleteMapping("/categories/{}/tasks/{taskId}")
-    public boolean deleteTask(@PathVariable Long taskId) {
-        return userService.deleteTask(taskId);
+    public ResponseEntity<Void> deleteTask(@PathVariable Long taskId) {
+        userService.deleteTask(taskId);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/categories/{}/tasks/{taskId}")
@@ -52,8 +58,14 @@ public class UserController {
     }
 
     @PostMapping("/categories/{categoryId}/tasks")
-    public Task addCategoryTask(@PathVariable Long categoryId, @RequestBody Task task) {
-        return userService.addCategoryTask(categoryId, task);
+    public ResponseEntity<Task> addCategoryTask(@PathVariable Long categoryId, @RequestBody Task task)
+            throws URISyntaxException {
+        Task savedTask = userService.addCategoryTask(categoryId, task);
+        return ResponseEntity
+                .created(new URI(
+                        "http://localhost:3000/categories/" + categoryId + "/tasks/" + savedTask.getId()
+                ))
+                .body(savedTask);
     }
 
     // --- категории ---
@@ -67,7 +79,11 @@ public class UserController {
     }
 
     @PostMapping("/categories")
-    public boolean addCategory(@RequestBody CategoryDTO categoryDTO) {
-        return userService.addCategory(memoryImpl.getUserId(), categoryDTO);
+    public ResponseEntity<Void> addCategory(@RequestBody CategoryDTO categoryDTO)
+            throws URISyntaxException {
+        userService.addCategory(memoryImpl.getUserId(), categoryDTO);
+        return ResponseEntity
+                .created(new URI("http://localhost:3000/categories/" + (++categoriesCount)))
+                .build();
     }
 }

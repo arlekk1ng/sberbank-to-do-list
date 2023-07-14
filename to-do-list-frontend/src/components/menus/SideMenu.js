@@ -100,11 +100,6 @@ const SideMenu = () => {
             default:
                 categoryService.getCategoryTasks(key, dispatch);
                 navigate(`/categories/${key}/tasks`);
-                
-                // клик по определенной категории
-                // отправить запрос на получение тасков по этой категории
-                // обновить слайс тасков
-                // перенаправить на страницу с тасками
         }
     };
     
