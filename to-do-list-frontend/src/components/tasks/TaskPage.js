@@ -4,7 +4,7 @@ import TaskCreateModal from "./TaskCreateModal";
 import {Divider} from "antd";
 import {useDispatch, useSelector} from "react-redux";
 import {useParams} from "react-router-dom";
-import taskService from "../../services/taskService";
+import categoryService from "../../services/categoryService";
 
 const TaskPage = () => {
     const dispatch = useDispatch();
@@ -13,7 +13,7 @@ const TaskPage = () => {
 
     useEffect(() => {
         if (auth.isLoggedIn) {
-            taskService.getCategoryTasks(categoryId, dispatch);
+            categoryService.getCategoryTasks(categoryId, dispatch);
         }
     }, []);
     
@@ -24,9 +24,9 @@ const TaskPage = () => {
                 margin: "auto",
         }}
         >
-            <TaskCreateModal categoryId={categoryId}/>
+            <TaskCreateModal categoryId={categoryId} />
             <Divider />
-            <TaskTable />
+            <TaskTable categoryId={categoryId} />
         </div>
     );
 };

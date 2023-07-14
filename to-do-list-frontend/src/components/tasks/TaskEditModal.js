@@ -1,8 +1,9 @@
 import {Form, Input, Modal} from 'antd';
 import {useState} from 'react';
 import TextArea from "antd/es/input/TextArea";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {EditOutlined} from "@ant-design/icons";
+import taskService from "../../services/taskService";
 
 const TaskEditForm = ({ open, onCreate, onCancel, record }) => {
     const [form] = Form.useForm();
@@ -62,14 +63,14 @@ const TaskEditForm = ({ open, onCreate, onCancel, record }) => {
         </Modal>
     );
 };
-const TaskEditModal = ({record}) => {
+const TaskEditModal = ({props}) => {
     const dispatch = useDispatch();
-    const tasksData = useSelector(state => state.tasks.data);
+    const {categoryId, record, tasks} = props;
     
     const [open, setOpen] = useState(false);
     
     const onCreate = (values) => {
-        // обновление задачи
+        taskService.updateTask(categoryId, record.id, values, dispatch, tasks);
         setOpen(false);
     };
     

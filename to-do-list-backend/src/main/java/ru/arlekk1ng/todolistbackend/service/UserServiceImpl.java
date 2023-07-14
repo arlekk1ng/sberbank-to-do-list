@@ -9,6 +9,7 @@ import ru.arlekk1ng.todolistbackend.entity.task.Task;
 import ru.arlekk1ng.todolistbackend.entity.task.enumeration.TaskStateEnum;
 import ru.arlekk1ng.todolistbackend.entity.user.User;
 import ru.arlekk1ng.todolistbackend.repository.CategoryRepository;
+import ru.arlekk1ng.todolistbackend.repository.TaskRepository;
 import ru.arlekk1ng.todolistbackend.repository.UserRepository;
 
 import java.time.LocalDate;
@@ -20,12 +21,66 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
+    private final TaskRepository taskRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, CategoryRepository categoryRepository) {
+    public UserServiceImpl(
+            UserRepository userRepository,
+            CategoryRepository categoryRepository,
+            TaskRepository taskRepository
+    ) {
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
+        this.taskRepository = taskRepository;
     }
+
+    // --- задачи ---
+
+    @Override
+    public boolean setTaskState(Long taskId, TaskStateEnum state) {
+        Task task = getTask(taskId);
+
+        task.setState(state);
+
+        if (TaskStateEnum.COMPLETED.equals(state)) {
+            task.setCompletionDate(LocalDate.now());
+        } else if (TaskStateEnum.NOT_COMPLETED.equals(state)) {
+            task.setCompletionDate(null);
+        }
+
+        taskRepository.save(task);
+
+        return true;
+    }
+
+    @Override
+    public boolean deleteTask(Long taskId) {
+        taskRepository.deleteById(taskId);
+        return true;
+    }
+
+    @Override
+    public boolean updateTask(Long taskId, Task reqTask) {
+        Task task = getTask(taskId);
+
+        task.setName(reqTask.getName());
+        task.setDescription(reqTask.getDescription());
+
+        taskRepository.save(task);
+
+        return true;
+    }
+
+    private Task getTask(Long taskId) {
+        Optional<Task> taskOptional = taskRepository.findById(taskId);
+
+        if (taskOptional.isEmpty()) {
+            throw new RuntimeException("Задача с id = " + taskId + " не найдена");
+        }
+
+        return taskOptional.get();
+    }
+
 
     // --- задачи категории ---
 
@@ -36,16 +91,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean addCategoryTask(Long categoryId, Task task) {
+    public Task addCategoryTask(Long categoryId, Task task) {
         Category category = getCategory(categoryId);
 
         task.setCreationDate(LocalDate.now());
         task.setState(TaskStateEnum.NOT_COMPLETED);
 
-        category.getTasks().add(task);
+        List<Task> tasks = category.getTasks();
+        tasks.add(task);
         categoryRepository.save(category);
 
-        return true;
+        return tasks.get(tasks.size() - 1);
     }
 
     private Category getCategory(Long categoryId) {
