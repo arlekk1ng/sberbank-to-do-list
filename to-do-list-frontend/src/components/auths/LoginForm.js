@@ -1,9 +1,10 @@
 import {LockOutlined, UserOutlined} from '@ant-design/icons';
 import {Button, Form, Input} from 'antd';
 import authService from "../../services/authService";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import categoryService from "../../services/categoryService";
+import {login} from "../../slices/authSlice";
 
 const LoginForm = () => {
     const dispatch = useDispatch();
@@ -12,6 +13,10 @@ const LoginForm = () => {
     const onFinish = async (values) => {
         try {
             await authService.login(values);
+            
+            const user = JSON.parse(localStorage.getItem("user"));
+            dispatch(login(user));
+            
             categoryService.getCategories(dispatch);
             navigate("/");
         } catch (error) {

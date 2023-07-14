@@ -1,8 +1,7 @@
 import {Checkbox, Space, Table} from 'antd';
 import {useDispatch, useSelector} from "react-redux";
 import {DeleteOutlined} from "@ant-design/icons";
-import taskService from "../../services/taskService";
-import TaskUpdateModal from "./TaskUpdateModal";
+import TaskEditModal from "./TaskEditModal";
 
 const expandable = {
     expandedRowRender: (record) => (
@@ -17,61 +16,70 @@ const expandable = {
     ),
 };
 
-const TaskTable = () => {
-    const tasksData = useSelector(state => state.tasks.data);
-    const dispatch = useDispatch();
-    
-    const getDataWithKey = () => {
-        return tasksData.map(task => ({
-            ...task,
-            key: `task-${task.id}`,
-            state: (
-                <Checkbox
-                    checked={task.state === "COMPLETED"}
-                    onChange={(event) => {
-                        const reqTask = {
-                            state: event.target.checked ? "COMPLETED" : "NOT_COMPLETED",
-                        };
-                        taskService.updateTaskState(task.id, reqTask, dispatch, tasksData);
+const columns = [
+    {
+        title: 'Состояние',
+        dataIndex: 'state',
+        align: "center",
+        width: 1,
+        render: (_, record) => {
+            if (record.state.includes("COMPLETED")) {
+                return (
+                    <Checkbox
+                        defaultChecked={record.state === "COMPLETED"}
+                        onChange={(event) => {
+                            const taskDTO = {
+                                ...record,
+                                state: event.target.checked ? "COMPLETED" : "NOT_COMPLETED",
+                            };
+                            // обновление состояния задачи
+                        }}
+                    />
+                );
+            }
+            
+            return record.state;
+        },
+    },
+    {
+        title: 'Название',
+        dataIndex: 'name',
+    },
+    Table.EXPAND_COLUMN,
+    {
+        title: 'Действия',
+        dataIndex: 'action',
+        width: 1,
+        align: "center",
+        render: (_, record) => (
+            <Space size="middle">
+                <TaskEditModal record={record} />
+                <DeleteOutlined
+                    onClick={() => {
+                        // удаление задачи
                     }}
                 />
-            )
+            </Space>
+        ),
+    },
+];
+
+const TaskTable = () => {
+    const tasks = useSelector(state => state.tasks.value);
+    const dispatch = useDispatch();
+    
+    const getTasksWithKey = () => {
+        return tasks.map(task => ({
+            ...task,
+            key: task.id,
         }));
     };
     
     return (
         <div>
             <Table
-                columns={[
-                    {
-                        title: 'Состояние',
-                        dataIndex: 'state',
-                        align: "center",
-                        width: 1,
-                    },
-                    Table.EXPAND_COLUMN,
-                    {
-                        title: 'Название',
-                        dataIndex: 'name',
-                    },
-                    {
-                        title: 'Действия',
-                        dataIndex: 'action',
-                        width: 1,
-                        align: "center",
-                        render: (_, record) => (
-                            <Space size="middle">
-                                <TaskUpdateModal record={record} />
-                                <DeleteOutlined
-                                    onClick={() => {
-                                        taskService.deleteTask(record.id, dispatch);
-                                    }}
-                                />
-                            </Space>
-                        ),
-                    },
-                ]}
-                dataSource={getDataWithKey()}
+                columns={columns}
+                dataSource={getTasksWithKey()}
                 pagination={false}
                 expandable={expandable}
             />

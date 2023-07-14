@@ -2,14 +2,19 @@ import React, {useEffect} from 'react';
 import TaskTable from "./TaskTable";
 import TaskCreateModal from "./TaskCreateModal";
 import {Divider} from "antd";
+import {useDispatch, useSelector} from "react-redux";
+import {useParams} from "react-router-dom";
 import taskService from "../../services/taskService";
-import {useDispatch} from "react-redux";
 
 const TaskPage = () => {
     const dispatch = useDispatch();
+    const { categoryId } = useParams();
+    const auth = useSelector(state => state.auth);
 
     useEffect(() => {
-        taskService.getTasks(dispatch);
+        if (auth.isLoggedIn) {
+            taskService.getCategoryTasks(categoryId, dispatch);
+        }
     }, []);
     
     return (
@@ -19,7 +24,7 @@ const TaskPage = () => {
                 margin: "auto",
         }}
         >
-            <TaskCreateModal />
+            <TaskCreateModal categoryId={categoryId}/>
             <Divider />
             <TaskTable />
         </div>

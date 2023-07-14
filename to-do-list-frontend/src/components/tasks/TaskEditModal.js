@@ -1,10 +1,10 @@
-import { Button, Form, Input, Modal, Radio } from 'antd';
-import { useState } from 'react';
+import {Form, Input, Modal} from 'antd';
+import {useState} from 'react';
 import TextArea from "antd/es/input/TextArea";
-import taskService from "../../services/taskService";
 import {useDispatch, useSelector} from "react-redux";
 import {EditOutlined} from "@ant-design/icons";
-const CollectionCreateForm = ({ open, onCreate, onCancel }) => {
+
+const TaskEditForm = ({ open, onCreate, onCancel, record }) => {
     const [form] = Form.useForm();
     
     return (
@@ -40,15 +40,21 @@ const CollectionCreateForm = ({ open, onCreate, onCancel }) => {
                             message: 'Пожалуйста введите название задачи!',
                         },
                     ]}
+                    initialValue={record.name}
                 >
-                    <Input />
+                    <Input allowClear />
                 </Form.Item>
                 
-                <Form.Item name="description" label="Описание">
+                <Form.Item
+                    name="description"
+                    label="Описание"
+                    initialValue={record.description}
+                >
                     <TextArea
                         showCount
                         maxLength={255}
                         autoSize
+                        allowClear
                     />
                 </Form.Item>
                 
@@ -56,14 +62,14 @@ const CollectionCreateForm = ({ open, onCreate, onCancel }) => {
         </Modal>
     );
 };
-const TaskUpdateModal = ({record}) => {
+const TaskEditModal = ({record}) => {
     const dispatch = useDispatch();
     const tasksData = useSelector(state => state.tasks.data);
     
     const [open, setOpen] = useState(false);
     
     const onCreate = (values) => {
-        taskService.updateTask(record.id, values, dispatch, tasksData);
+        // обновление задачи
         setOpen(false);
     };
     
@@ -74,14 +80,15 @@ const TaskUpdateModal = ({record}) => {
                     setOpen(true);
                 }}
             />
-            <CollectionCreateForm
+            <TaskEditForm
                 open={open}
                 onCreate={onCreate}
                 onCancel={() => {
                     setOpen(false);
                 }}
+                record={record}
             />
         </div>
     );
 };
-export default TaskUpdateModal;
+export default TaskEditModal;

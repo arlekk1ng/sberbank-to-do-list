@@ -5,6 +5,7 @@ import {setDefaultMenu, setUserMenu} from "../../slices/sideMenuSlice";
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import categoryService from "../../services/categoryService";
+import taskService from "../../services/taskService";
 
 const CategoryCreateForm = ({ open, onCreate, onCancel }) => {
     const [form] = Form.useForm();
@@ -98,6 +99,9 @@ const SideMenu = () => {
                 setOpen(true);
                 break;
             default:
+                taskService.getCategoryTasks(key, dispatch);
+                navigate(`/categories/${key}/tasks`);
+                
                 // клик по определенной категории
                 // отправить запрос на получение тасков по этой категории
                 // обновить слайс тасков

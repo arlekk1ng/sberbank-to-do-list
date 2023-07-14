@@ -1,7 +1,5 @@
 import axios from "axios";
-import {API_DOMAIN} from "./constants";
 
-// const API_URL = `${API_DOMAIN}/api/auth/`;
 const API_URL = "/api/auth/";
 
 const register = (registration) => {

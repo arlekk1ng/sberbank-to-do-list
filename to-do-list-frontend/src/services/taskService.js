@@ -1,13 +1,13 @@
 import axios from "axios";
 import authHeader from "./authHeader";
-import {setCategories} from "../slices/categoriesSlice";
+import {setTasks} from "../slices/tasksSlice";
 
 const API_URL = "/categories";
 
-const getCategories = (dispatch) => {
-    return axios.get(API_URL,  {headers: authHeader()}).then(
+const getCategoryTasks = (categoryId, dispatch) => {
+    return axios.get(`${API_URL}/${categoryId}/tasks`,  {headers: authHeader()}).then(
         (response) => {
-            dispatch(setCategories(response.data));
+            dispatch(setTasks(response.data));
         },
         (error) => {
             const _content = (error.response && error.response.data) ||
@@ -16,15 +16,15 @@ const getCategories = (dispatch) => {
             
             console.error(_content);
             
-            dispatch(setCategories([]));
+            dispatch(setTasks([]));
         });
 };
 
-const addCategory = (categoryDTO, dispatch) => {
-    return axios.post(API_URL, categoryDTO, {headers: authHeader()})
+const addCategoryTask = (categoryId, task, dispatch) => {
+    return axios.post(`${API_URL}/${categoryId}/tasks`, task, {headers: authHeader()})
         .then(
             (response) => {
-                getCategories(dispatch);
+                getCategoryTasks(categoryId, dispatch);
             },
             (error) => {
                 const _content = (error.response && error.response.data) ||
@@ -36,9 +36,9 @@ const addCategory = (categoryDTO, dispatch) => {
         )
 }
 
-const categoryService = {
-    getCategories,
-    addCategory,
+const taskService = {
+    getCategoryTasks,
+    addCategoryTask,
 };
 
-export default categoryService;
+export default taskService;

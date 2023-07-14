@@ -1,17 +1,17 @@
-import { Button, Form, Input, Modal, Radio } from 'antd';
-import { useState } from 'react';
+import {Button, Form, Input, Modal} from 'antd';
+import {useState} from 'react';
 import TextArea from "antd/es/input/TextArea";
-import taskService from "../../services/taskService";
 import {useDispatch} from "react-redux";
+import taskService from "../../services/taskService";
 
-const CollectionCreateForm = ({ open, onCreate, onCancel }) => {
+const TaskCreateForm = ({ open, onCreate, onCancel }) => {
     const [form] = Form.useForm();
     
     return (
         <Modal
             open={open}
-            title="Создать новую задачу"
-            okText="Создать"
+            title="Добавить новую задачу"
+            okText="Добавить"
             cancelText="Отмена"
             onCancel={onCancel}
             onOk={() => {
@@ -44,7 +44,10 @@ const CollectionCreateForm = ({ open, onCreate, onCancel }) => {
                     <Input />
                 </Form.Item>
                 
-                <Form.Item name="description" label="Описание">
+                <Form.Item
+                    name="description"
+                    label="Описание"
+                >
                     <TextArea
                         showCount
                         maxLength={255}
@@ -57,13 +60,12 @@ const CollectionCreateForm = ({ open, onCreate, onCancel }) => {
     );
 };
 
-const TaskCreateModal = () => {
+const TaskCreateModal = ({categoryId}) => {
     const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
     
     const onCreate = (values) => {
-        // console.log('Received values of form: ', values);
-        taskService.addTask(values, dispatch);
+        taskService.addCategoryTask(categoryId, values, dispatch);
         setOpen(false);
     };
     
@@ -77,7 +79,7 @@ const TaskCreateModal = () => {
             >
                 Добавить задачу
             </Button>
-            <CollectionCreateForm
+            <TaskCreateForm
                 open={open}
                 onCreate={onCreate}
                 onCancel={() => {
